@@ -10,14 +10,12 @@ task :console do
   Pry.start
 end
 
-desc "Start the server"
-task :server do  
+desc "Run rack server"
+task :server do
   if ActiveRecord::Base.connection.migration_context.needs_migration?
     puts "Migrations are pending. Make sure to run `rake db:migrate` first."
     return
   end
 
-  # rerun allows auto-reloading of server when files are updated
-  # -b runs in the background (include it or binding.pry won't work)
-  exec "bundle exec rerun -b 'rackup config.ru'"
+  exec "bundle exec rerun -b -c 'rackup -s webrick config.ru'"
 end
